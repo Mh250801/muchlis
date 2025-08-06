@@ -1,11 +1,34 @@
-Nama Lengkap,NIK,Tempat Lahir,Tanggal Lahir,Jenis Kelamin,Alamat,Nomor HP,Email
-Alice Johnson,1234567890167,Jakarta,01-01-2005,Perempuan,Jl. Melati No. 1,081234567890,alice.johnson@email.com
-Budi Santoso,1234567890168,Surabaya,02-02-2005,Laki-laki,Jl. Kenanga No. 2,081234567891,budi.santoso@email.com
-Chandra Wijaya,1234567890169,Bandung,03-03-2005,Laki-laki,Jl. Angsana No. 3,081234567892,chandra.wijaya@email.com
-Dewi Permatasari,1234567890170,Medan,04-04-2005,Perempuan,Jl. Melur No. 4,081234567893,dewi.permatasari@email.com
-Eko Prasetyo,1234567890171,Yogyakarta,05-05-2005,Laki-laki,Jl. Durian No. 5,081234567894,eko.prasetyo@email.com
-Fiona Hasan,1234567890172,Palembang,06-06-2005,Perempuan,Jl. Flamboyan No. 6,081234567895,fiona.hasan@email.com
-Gilang Ramadhan,1234567890173,Semarang,07-07-2005,Laki-laki,Jl. Srikaya No. 7,081234567896,gilang.ramadhan@email.com
-Hana Nurjannah,1234567890174,Makassar,08-08-2005,Perempuan,Jl. Kenanga No. 8,081234567897,hena.nurjannah@email.com
-Iwan Setiawan,1234567890175,Bali,09-09-2005,Laki-laki,Jl. Bougenville No. 9,081234567898,iwan.setiawan@email.com
-Jasmine Rizky,1234567890176,Nusa Dua,10-10-2005,Perempuan,Jl. Anggrek No. 10,081234567899,jasmine.rizky@email.com
+// Submission event handler
+registrationForm.addEventListener('submit', e => {
+    e.preventDefault();
+    formError.classList.add('hidden');
+    const formData = {
+        namaLengkap: registrationForm.namaLengkap.value.trim(),
+        nik: registrationForm.nik.value.trim(),
+        tempatLahir: registrationForm.tempatLahir.value.trim(),
+        tanggalLahir: registrationForm.tanggalLahir.value,
+        jenisKelamin: registrationForm.jenisKelamin.value,
+        alamatSiswa: registrationForm.alamatSiswa.value.trim(),
+        nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
+        emailSiswa: registrationForm.emailSiswa.value.trim(),
+        namaOrangtua: registrationForm.namaOrangtua.value.trim(),
+        alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
+        pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
+        penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
+        nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
+        dataIjazah: registrationForm.dataIjazah.value.trim(),
+        dataNISN: registrationForm.dataNISN.value.trim(),
+        pilihanJurusan: registrationForm.pilihanJurusan.value,
+    };
+    if (!validateFormData(formData)) {
+        formError.classList.remove('hidden');
+        return;
+    }
+    // Send data to server to save as CSV
+    fetch('/save-registration', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+
