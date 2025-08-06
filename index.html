@@ -22,6 +22,7 @@
 <h1 class="text-3xl font-bold mb-8 text-gray-900">Sistem Registrasi Siswa</h1>
 
 <div id="login-register-container" class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+  <!-- Login Form -->
   <div id="login-form">
     <h2 class="text-xl font-semibold mb-4">Login</h2>
     <form id="loginForm" class="space-y-4" autocomplete="off">
@@ -41,6 +42,7 @@
     </form>
   </div>
 
+  <!-- Registration Form -->
   <div id="register-form" class="hidden">
     <h2 class="text-xl font-semibold mb-4">Registrasi</h2>
     <form id="registerForm" class="space-y-4" autocomplete="off">
@@ -62,7 +64,6 @@
 </div>
 
 <div id="main-page" class="hidden w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 mt-8">
-
   <h2 class="text-2xl font-semibold mb-6 text-gray-900">Halaman Utama - Pendaftaran Siswa</h2>
 
   <section id="info-pendaftaran" class="mb-10">
@@ -73,6 +74,7 @@
     <p class="text-gray-700">Biaya Pendaftaran: Rp 200.000,-</p>
   </section>
 
+  <!-- Registration Form -->
   <section id="form-pendaftaran" class="mb-6">
     <h3 class="text-lg font-semibold mb-4">Formulir Pendaftaran</h3>
     <form id="registrationForm" class="space-y-6">
@@ -175,7 +177,6 @@
       </div>
 
       <p id="formError" class="error-text mt-3 hidden">Mohon lengkapi semua data dengan benar.</p>
-
     </form>
   </section>
 
@@ -195,15 +196,10 @@
     <p id="pengumumanMessage" class="text-lg"></p>
     <button id="logoutBtn" class="mt-6 bg-gray-700 text-white px-5 py-2 rounded hover:bg-gray-800 transition">Logout</button>
   </section>
-
 </div>
 
 <script>
 (() => {
-  // Using localStorage for simple persistence of users and registration data
-  // Users stored as [{username, password}]
-  // Registrations stored by username as key
-
   const loginContainer = document.getElementById('login-register-container');
   const loginForm = document.getElementById('loginForm');
   const registerForm = document.getElementById('registerForm');
@@ -211,7 +207,7 @@
   const registerError = document.getElementById('registerError');
   const btnShowRegister = document.getElementById('showRegister');
   const btnShowLogin = document.getElementById('showLogin');
-
+  
   const mainPage = document.getElementById('main-page');
   const registrationForm = document.getElementById('registrationForm');
   const formError = document.getElementById('formError');
@@ -223,6 +219,8 @@
   const pengumumanTitle = document.getElementById('pengumumanTitle');
   const pengumumanMessage = document.getElementById('pengumumanMessage');
   const logoutBtn = document.getElementById('logoutBtn');
+
+  let currentUser = null;
 
   // Utility functions
   function getUsers() {
@@ -237,7 +235,7 @@
   function saveRegistrations(regs) {
     localStorage.setItem('registrations', JSON.stringify(regs));
   }
-
+  
   // Show/hide login/register forms
   btnShowRegister.onclick = () => {
     loginForm.parentElement.classList.add('hidden');
@@ -249,7 +247,7 @@
     loginForm.parentElement.classList.remove('hidden');
     clearErrors();
   };
-
+  
   function clearErrors() {
     loginError.classList.add('hidden');
     registerError.classList.add('hidden');
@@ -291,11 +289,9 @@
     loginSuccess(username);
   });
 
-  // Login success: show main page
   function loginSuccess(username) {
     loginContainer.classList.add('hidden');
     mainPage.classList.remove('hidden');
-    clearForm();
     currentUser = username;
     loadRegistrationData();
     pengumuman.classList.add('hidden');
@@ -311,14 +307,7 @@
     pengumuman.classList.add('hidden');
   };
 
-  // Clear form and error
-  function clearForm() {
-    registrationForm.reset();
-    formError.classList.add('hidden');
-  }
-
-  // Load registration if exists
-  let currentUser = null;
+  // Load registration data
   function loadRegistrationData() {
     const regs = getRegistrations();
     if (currentUser && regs[currentUser] && regs[currentUser].status) {
@@ -326,7 +315,41 @@
     }
   }
 
-  // Validate data completeness
+  // Registration form submit handler
+  registrationForm.addEventListener('submit', e => {
+    e.preventDefault();
+    formError.classList.add('hidden');
+
+    const formData = {
+      namaLengkap: registrationForm.namaLengkap.value.trim(),
+      nik: registrationForm.nik.value.trim(),
+      tempatLahir: registrationForm.tempatLahir.value.trim(),
+      tanggalLahir: registrationForm.tanggalLahir.value,
+      jenisKelamin: registrationForm.jenisKelamin.value,
+      alamatSiswa: registrationForm.alamatSiswa.value.trim(),
+      nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
+      emailSiswa: registrationForm.emailSiswa.value.trim(),
+      namaOrangtua: registrationForm.namaOrangtua.value.trim(),
+      alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
+      pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
+      penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
+      nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
+      dataIjazah: registrationForm.dataIjazah.value.trim(),
+      dataNISN: registrationForm.dataNISN.value.trim(),
+      pilihanJurusan: registrationForm.pilihanJurusan.value,
+    };
+
+    if (!validateFormData(formData)) {
+      formError.classList.remove('hidden');
+      return;
+    }
+
+    // Show verification section
+    displayVerifikasi(formData);
+    verifikasiSection.classList.remove('hidden');
+    Array.from(registrationForm.elements).forEach(el => el.disabled = true);
+  });
+
   function validateFormData(data) {
     const requiredFields = [
       'namaLengkap', 'nik', 'tempatLahir', 'tanggalLahir', 'jenisKelamin',
@@ -338,7 +361,6 @@
     return requiredFields.every(field => data[field] && data[field].toString().trim().length > 0);
   }
 
-  // Show verifikasi data
   function displayVerifikasi(data) {
     let html = '<ul class="list-disc pl-5 space-y-2 text-gray-800">';
     html += '<li><strong>Data Siswa:</strong><br />';
@@ -362,53 +384,12 @@
     html += `Data NISN: ${data.dataNISN}</li>`;
 
     html += `<li><strong>Pemilihan Jurusan:</strong> ${data.pilihanJurusan}</li>`;
-
     html += '</ul>';
 
     verifikasiData.innerHTML = html;
   }
 
-  // Registration form submit handler
-  registrationForm.addEventListener('submit', e => {
-    e.preventDefault();
-    formError.classList.add('hidden');
-
-    // Gather form data
-    const formData = {
-      namaLengkap: registrationForm.namaLengkap.value.trim(),
-      nik: registrationForm.nik.value.trim(),
-      tempatLahir: registrationForm.tempatLahir.value.trim(),
-      tanggalLahir: registrationForm.tanggalLahir.value,
-      jenisKelamin: registrationForm.jenisKelamin.value,
-      alamatSiswa: registrationForm.alamatSiswa.value.trim(),
-      nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
-      emailSiswa: registrationForm.emailSiswa.value.trim(),
-
-      namaOrangtua: registrationForm.namaOrangtua.value.trim(),
-      alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
-      pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
-      penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
-      nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
-
-      dataIjazah: registrationForm.dataIjazah.value.trim(),
-      dataNISN: registrationForm.dataNISN.value.trim(),
-
-      pilihanJurusan: registrationForm.pilihanJurusan.value,
-    };
-
-    if (!validateFormData(formData)) {
-      formError.classList.remove('hidden');
-      return;
-    }
-
-    // Show verification section with data
-    displayVerifikasi(formData);
-    verifikasiSection.classList.remove('hidden');
-
-    // Disable form inputs and submit button while verifying
-    Array.from(registrationForm.elements).forEach(el => el.disabled = true);
-  });
-
+  // Acceptance or rejection of the registration
   btnTerima.onclick = () => {
     saveRegistrationStatus('Diterima');
     showPengumuman('Diterima');
@@ -422,22 +403,7 @@
   function saveRegistrationStatus(status) {
     const regs = getRegistrations();
     const formData = {
-      namaLengkap: registrationForm.namaLengkap.value.trim(),
-      nik: registrationForm.nik.value.trim(),
-      tempatLahir: registrationForm.tempatLahir.value.trim(),
-      tanggalLahir: registrationForm.tanggalLahir.value,
-      jenisKelamin: registrationForm.jenisKelamin.value,
-      alamatSiswa: registrationForm.alamatSiswa.value.trim(),
-      nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
-      emailSiswa: registrationForm.emailSiswa.value.trim(),
-      namaOrangtua: registrationForm.namaOrangtua.value.trim(),
-      alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
-      pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
-      penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
-      nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
-      dataIjazah: registrationForm.dataIjazah.value.trim(),
-      dataNISN: registrationForm.dataNISN.value.trim(),
-      pilihanJurusan: registrationForm.pilihanJurusan.value,
+      ...registrationForm.elements,
       status: status
     };
     regs[currentUser] = formData;
@@ -446,7 +412,6 @@
 
   function showPengumuman(status) {
     verifikasiSection.classList.add('hidden');
-    mainPage.querySelector('#form-pendaftaran').classList.add('hidden');
     pengumuman.classList.remove('hidden');
 
     if(status === 'Diterima') {
@@ -457,9 +422,7 @@
       pengumumanMessage.textContent = 'Mohon maaf, Anda belum diterima sebagai siswa baru. Silakan coba lagi di gelombang berikutnya.';
     }
   }
-
 })();
 </script>
 </body>
 </html>
-
