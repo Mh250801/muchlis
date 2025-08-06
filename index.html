@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sistem Registrasi Siswa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body {
+    background: #f9fafb;
+  }
+  .hidden {
+    display: none;
+  }
+  .error-text {
+    color: #dc2626; /* Tailwind Red-600 */
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col items-center p-4 font-sans">
+
+<h1 class="text-3xl font-bold mb-8 text-gray-900">Sistem Registrasi Siswa</h1>
+
+<div id="login-register-container" class="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
+  <div id="login-form">
+    <h2 class="text-xl font-semibold mb-4">Login</h2>
+    <form id="loginForm" class="space-y-4" autocomplete="off">
+      <div>
+        <label for="loginUsername" class="block mb-1 font-medium text-gray-700">Username</label>
+        <input type="text" id="loginUsername" name="loginUsername" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label for="loginPassword" class="block mb-1 font-medium text-gray-700">Password</label>
+        <input type="password" id="loginPassword" name="loginPassword" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <p id="loginError" class="error-text text-sm mt-1 hidden">Username atau password salah.</p>
+      <div class="flex justify-between items-center">
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">Login</button>
+        <button type="button" id="showRegister" class="text-indigo-600 hover:underline text-sm">Registrasi</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="register-form" class="hidden">
+    <h2 class="text-xl font-semibold mb-4">Registrasi</h2>
+    <form id="registerForm" class="space-y-4" autocomplete="off">
+      <div>
+        <label for="regUsername" class="block mb-1 font-medium text-gray-700">Username</label>
+        <input type="text" id="regUsername" name="regUsername" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <div>
+        <label for="regPassword" class="block mb-1 font-medium text-gray-700">Password</label>
+        <input type="password" id="regPassword" name="regPassword" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+      </div>
+      <p id="registerError" class="error-text text-sm mt-1 hidden">Username sudah terdaftar, gunakan username lain.</p>
+      <div class="flex justify-between items-center">
+        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Simpan & Masuk</button>
+        <button type="button" id="showLogin" class="text-green-600 hover:underline text-sm">Kembali ke Login</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="main-page" class="hidden w-full max-w-4xl bg-white rounded-lg shadow-lg p-6 mt-8">
+
+  <h2 class="text-2xl font-semibold mb-6 text-gray-900">Halaman Utama - Pendaftaran Siswa</h2>
+
+  <section id="info-pendaftaran" class="mb-10">
+    <h3 class="text-lg font-semibold mb-3">Info Pendaftaran Gelombang dan Biaya Jurusan</h3>
+    <p class="text-gray-700 mb-1">Gelombang 1: 1 Januari - 30 April</p>
+    <p class="text-gray-700 mb-1">Gelombang 2: 1 Mei - 31 Agustus</p>
+    <p class="text-gray-700 mb-1">Gelombang 3: 1 September - 31 Desember</p>
+    <p class="text-gray-700">Biaya Pendaftaran: Rp 200.000,-</p>
+  </section>
+
+  <section id="form-pendaftaran" class="mb-6">
+    <h3 class="text-lg font-semibold mb-4">Formulir Pendaftaran</h3>
+    <form id="registrationForm" class="space-y-6">
+
+      <fieldset class="border border-gray-300 rounded p-4">
+        <legend class="font-semibold text-indigo-600 mb-3">Data Siswa</legend>
+        <div class="space-y-3">
+          <div>
+            <label for="namaLengkap" class="block mb-1 font-medium text-gray-700">Nama Lengkap</label>
+            <input type="text" id="namaLengkap" name="namaLengkap" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="nik" class="block mb-1 font-medium text-gray-700">NIK</label>
+            <input type="text" id="nik" name="nik" required pattern="\d{16}" maxlength="16" placeholder="16 digit NIK" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="tempatTanggalLahir" class="block mb-1 font-medium text-gray-700">Tempat & Tanggal Lahir</label>
+            <input type="text" id="tempatLahir" name="tempatLahir" placeholder="Tempat Lahir" required class="mb-2 w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+            <input type="date" id="tanggalLahir" name="tanggalLahir" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="jenisKelamin" class="block mb-1 font-medium text-gray-700">Jenis Kelamin</label>
+            <select id="jenisKelamin" name="jenisKelamin" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="" disabled selected>Pilih jenis kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+          <div>
+            <label for="alamatSiswa" class="block mb-1 font-medium text-gray-700">Alamat Lengkap (RT/RW, Kelurahan, Kecamatan, dsb)</label>
+            <textarea id="alamatSiswa" name="alamatSiswa" required rows="3" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+          </div>
+          <div>
+            <label for="nomorHpSiswa" class="block mb-1 font-medium text-gray-700">Nomor HP Siswa</label>
+            <input type="tel" id="nomorHpSiswa" name="nomorHpSiswa" required pattern="\+?\d{10,15}" placeholder="Contoh: +6281234567890" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="emailSiswa" class="block mb-1 font-medium text-gray-700">Email Siswa</label>
+            <input type="email" id="emailSiswa" name="emailSiswa" required placeholder="email@example.com" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="border border-gray-300 rounded p-4">
+        <legend class="font-semibold text-indigo-600 mb-3">Data Orangtua Siswa</legend>
+        <div class="space-y-3">
+          <div>
+            <label for="namaOrangtua" class="block mb-1 font-medium text-gray-700">Nama Ayah & Ibu</label>
+            <input type="text" id="namaOrangtua" name="namaOrangtua" required placeholder="Nama lengkap ayah & ibu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="alamatOrangtua" class="block mb-1 font-medium text-gray-700">Alamat Tinggal Orangtua</label>
+            <textarea id="alamatOrangtua" name="alamatOrangtua" required rows="3" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+          </div>
+          <div>
+            <label for="pekerjaanOrangtua" class="block mb-1 font-medium text-gray-700">Pekerjaan</label>
+            <input type="text" id="pekerjaanOrangtua" name="pekerjaanOrangtua" required placeholder="Pekerjaan ayah/ibu" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="penghasilanOrangtua" class="block mb-1 font-medium text-gray-700">Penghasilan Bulanan</label>
+            <input type="number" min="0" id="penghasilanOrangtua" name="penghasilanOrangtua" required placeholder="Dalam Rupiah" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="nomorHpOrangtua" class="block mb-1 font-medium text-gray-700">Nomor HP Orangtua</label>
+            <input type="tel" id="nomorHpOrangtua" name="nomorHpOrangtua" required pattern="\+?\d{10,15}" placeholder="Contoh: +6281234567890" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="border border-gray-300 rounded p-4">
+        <legend class="font-semibold text-indigo-600 mb-3">Data Pendidikan</legend>
+        <div class="space-y-3">
+          <div>
+            <label for="dataIjazah" class="block mb-1 font-medium text-gray-700">Data Ijasah (no ijasah & asal sekolah)</label>
+            <input type="text" id="dataIjazah" name="dataIjazah" required placeholder="No Ijazah dan asal sekolah" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="dataNISN" class="block mb-1 font-medium text-gray-700">Data NISN</label>
+            <input type="text" id="dataNISN" name="dataNISN" required pattern="\d{10}" maxlength="10" placeholder="10 digit NISN" class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="border border-gray-300 rounded p-4">
+        <legend class="font-semibold text-indigo-600 mb-3">Pemilihan Jurusan</legend>
+        <div>
+          <label for="pilihanJurusan" class="block mb-1 font-medium text-gray-700">Pilih Jurusan</label>
+          <select id="pilihanJurusan" name="pilihanJurusan" required class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="" disabled selected>Pilih jurusan</option>
+            <option value="Teknik Komputer dan Jaringan">Teknik Komputer dan Jaringan</option>
+            <option value="Multimedia">Multimedia</option>
+            <option value="Akuntansi">Akuntansi</option>
+            <option value="Administrasi Perkantoran">Administrasi Perkantoran</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <div class="flex justify-end mt-6">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">Cek Data & Verifikasi</button>
+      </div>
+
+      <p id="formError" class="error-text mt-3 hidden">Mohon lengkapi semua data dengan benar.</p>
+
+    </form>
+  </section>
+
+  <section id="verifikasi-section" class="hidden">
+    <h3 class="text-lg font-semibold mb-3">Verifikasi Data Calon Siswa</h3>
+    <div class="overflow-auto max-h-72 p-4 rounded border border-gray-300 bg-gray-50" id="verifikasiData">
+      <!-- Verifikasi data akan muncul disini -->
+    </div>
+    <div class="mt-4 flex gap-4">
+      <button id="btnTerima" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Diterima</button>
+      <button id="btnTolak" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Tidak Diterima</button>
+    </div>
+  </section>
+
+  <section id="hasil-pengumuman" class="hidden mt-8 text-center">
+    <h3 class="text-xl font-semibold mb-3" id="pengumumanTitle"></h3>
+    <p id="pengumumanMessage" class="text-lg"></p>
+    <button id="logoutBtn" class="mt-6 bg-gray-700 text-white px-5 py-2 rounded hover:bg-gray-800 transition">Logout</button>
+  </section>
+
+</div>
+
+<script>
+(() => {
+  // Using localStorage for simple persistence of users and registration data
+  // Users stored as [{username, password}]
+  // Registrations stored by username as key
+
+  const loginContainer = document.getElementById('login-register-container');
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+  const loginError = document.getElementById('loginError');
+  const registerError = document.getElementById('registerError');
+  const btnShowRegister = document.getElementById('showRegister');
+  const btnShowLogin = document.getElementById('showLogin');
+
+  const mainPage = document.getElementById('main-page');
+  const registrationForm = document.getElementById('registrationForm');
+  const formError = document.getElementById('formError');
+  const verifikasiSection = document.getElementById('verifikasi-section');
+  const verifikasiData = document.getElementById('verifikasiData');
+  const btnTerima = document.getElementById('btnTerima');
+  const btnTolak = document.getElementById('btnTolak');
+  const pengumuman = document.getElementById('hasil-pengumuman');
+  const pengumumanTitle = document.getElementById('pengumumanTitle');
+  const pengumumanMessage = document.getElementById('pengumumanMessage');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Utility functions
+  function getUsers() {
+    return JSON.parse(localStorage.getItem('users') || '[]');
+  }
+  function saveUsers(users) {
+    localStorage.setItem('users', JSON.stringify(users));
+  }
+  function getRegistrations() {
+    return JSON.parse(localStorage.getItem('registrations') || '{}');
+  }
+  function saveRegistrations(regs) {
+    localStorage.setItem('registrations', JSON.stringify(regs));
+  }
+
+  // Show/hide login/register forms
+  btnShowRegister.onclick = () => {
+    loginForm.parentElement.classList.add('hidden');
+    registerForm.parentElement.classList.remove('hidden');
+    clearErrors();
+  };
+  btnShowLogin.onclick = () => {
+    registerForm.parentElement.classList.add('hidden');
+    loginForm.parentElement.classList.remove('hidden');
+    clearErrors();
+  };
+
+  function clearErrors() {
+    loginError.classList.add('hidden');
+    registerError.classList.add('hidden');
+    formError.classList.add('hidden');
+  }
+
+  // Register handler
+  registerForm.addEventListener('submit', e => {
+    e.preventDefault();
+    clearErrors();
+    const username = registerForm.regUsername.value.trim();
+    const password = registerForm.regPassword.value.trim();
+    if (!username || !password) return;
+
+    const users = getUsers();
+    if (users.find(user => user.username === username)) {
+      registerError.classList.remove('hidden');
+      return;
+    }
+    users.push({username, password});
+    saveUsers(users);
+    alert('Registrasi berhasil. Anda akan langsung masuk.');
+    loginSuccess(username);
+  });
+
+  // Login handler
+  loginForm.addEventListener('submit', e => {
+    e.preventDefault();
+    clearErrors();
+    const username = loginForm.loginUsername.value.trim();
+    const password = loginForm.loginPassword.value.trim();
+    const users = getUsers();
+
+    const user = users.find(u => u.username === username && u.password === password);
+    if (!user) {
+      loginError.classList.remove('hidden');
+      return;
+    }
+    loginSuccess(username);
+  });
+
+  // Login success: show main page
+  function loginSuccess(username) {
+    loginContainer.classList.add('hidden');
+    mainPage.classList.remove('hidden');
+    clearForm();
+    currentUser = username;
+    loadRegistrationData();
+    pengumuman.classList.add('hidden');
+    verifikasiSection.classList.add('hidden');
+  }
+
+  // Logout
+  logoutBtn.onclick = () => {
+    currentUser = null;
+    registrationForm.reset();
+    loginContainer.classList.remove('hidden');
+    mainPage.classList.add('hidden');
+    pengumuman.classList.add('hidden');
+  };
+
+  // Clear form and error
+  function clearForm() {
+    registrationForm.reset();
+    formError.classList.add('hidden');
+  }
+
+  // Load registration if exists
+  let currentUser = null;
+  function loadRegistrationData() {
+    const regs = getRegistrations();
+    if (currentUser && regs[currentUser] && regs[currentUser].status) {
+      showPengumuman(regs[currentUser].status);
+    }
+  }
+
+  // Validate data completeness
+  function validateFormData(data) {
+    const requiredFields = [
+      'namaLengkap', 'nik', 'tempatLahir', 'tanggalLahir', 'jenisKelamin',
+      'alamatSiswa', 'nomorHpSiswa', 'emailSiswa',
+      'namaOrangtua', 'alamatOrangtua', 'pekerjaanOrangtua', 'penghasilanOrangtua', 'nomorHpOrangtua',
+      'dataIjazah', 'dataNISN',
+      'pilihanJurusan'
+    ];
+    return requiredFields.every(field => data[field] && data[field].toString().trim().length > 0);
+  }
+
+  // Show verifikasi data
+  function displayVerifikasi(data) {
+    let html = '<ul class="list-disc pl-5 space-y-2 text-gray-800">';
+    html += '<li><strong>Data Siswa:</strong><br />';
+    html += `Nama Lengkap: ${data.namaLengkap}<br />`;
+    html += `NIK: ${data.nik}<br />`;
+    html += `Tempat & Tanggal Lahir: ${data.tempatLahir}, ${data.tanggalLahir}<br />`;
+    html += `Jenis Kelamin: ${data.jenisKelamin}<br />`;
+    html += `Alamat: ${data.alamatSiswa}<br />`;
+    html += `Nomor HP: ${data.nomorHpSiswa}<br />`;
+    html += `Email: ${data.emailSiswa}</li>`;
+
+    html += '<li><strong>Data Orangtua Siswa:</strong><br />';
+    html += `Nama Ayah & Ibu: ${data.namaOrangtua}<br />`;
+    html += `Alamat: ${data.alamatOrangtua}<br />`;
+    html += `Pekerjaan: ${data.pekerjaanOrangtua}<br />`;
+    html += `Penghasilan Bulanan: Rp${Number(data.penghasilanOrangtua).toLocaleString('id-ID')}<br />`;
+    html += `Nomor HP: ${data.nomorHpOrangtua}</li>`;
+
+    html += '<li><strong>Data Pendidikan:</strong><br />';
+    html += `Data Ijasah: ${data.dataIjazah}<br />`;
+    html += `Data NISN: ${data.dataNISN}</li>`;
+
+    html += `<li><strong>Pemilihan Jurusan:</strong> ${data.pilihanJurusan}</li>`;
+
+    html += '</ul>';
+
+    verifikasiData.innerHTML = html;
+  }
+
+  // Registration form submit handler
+  registrationForm.addEventListener('submit', e => {
+    e.preventDefault();
+    formError.classList.add('hidden');
+
+    // Gather form data
+    const formData = {
+      namaLengkap: registrationForm.namaLengkap.value.trim(),
+      nik: registrationForm.nik.value.trim(),
+      tempatLahir: registrationForm.tempatLahir.value.trim(),
+      tanggalLahir: registrationForm.tanggalLahir.value,
+      jenisKelamin: registrationForm.jenisKelamin.value,
+      alamatSiswa: registrationForm.alamatSiswa.value.trim(),
+      nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
+      emailSiswa: registrationForm.emailSiswa.value.trim(),
+
+      namaOrangtua: registrationForm.namaOrangtua.value.trim(),
+      alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
+      pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
+      penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
+      nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
+
+      dataIjazah: registrationForm.dataIjazah.value.trim(),
+      dataNISN: registrationForm.dataNISN.value.trim(),
+
+      pilihanJurusan: registrationForm.pilihanJurusan.value,
+    };
+
+    if (!validateFormData(formData)) {
+      formError.classList.remove('hidden');
+      return;
+    }
+
+    // Show verification section with data
+    displayVerifikasi(formData);
+    verifikasiSection.classList.remove('hidden');
+
+    // Disable form inputs and submit button while verifying
+    Array.from(registrationForm.elements).forEach(el => el.disabled = true);
+  });
+
+  btnTerima.onclick = () => {
+    saveRegistrationStatus('Diterima');
+    showPengumuman('Diterima');
+  };
+
+  btnTolak.onclick = () => {
+    saveRegistrationStatus('Tidak Diterima');
+    showPengumuman('Tidak Diterima');
+  };
+
+  function saveRegistrationStatus(status) {
+    const regs = getRegistrations();
+    const formData = {
+      namaLengkap: registrationForm.namaLengkap.value.trim(),
+      nik: registrationForm.nik.value.trim(),
+      tempatLahir: registrationForm.tempatLahir.value.trim(),
+      tanggalLahir: registrationForm.tanggalLahir.value,
+      jenisKelamin: registrationForm.jenisKelamin.value,
+      alamatSiswa: registrationForm.alamatSiswa.value.trim(),
+      nomorHpSiswa: registrationForm.nomorHpSiswa.value.trim(),
+      emailSiswa: registrationForm.emailSiswa.value.trim(),
+      namaOrangtua: registrationForm.namaOrangtua.value.trim(),
+      alamatOrangtua: registrationForm.alamatOrangtua.value.trim(),
+      pekerjaanOrangtua: registrationForm.pekerjaanOrangtua.value.trim(),
+      penghasilanOrangtua: registrationForm.penghasilanOrangtua.value.trim(),
+      nomorHpOrangtua: registrationForm.nomorHpOrangtua.value.trim(),
+      dataIjazah: registrationForm.dataIjazah.value.trim(),
+      dataNISN: registrationForm.dataNISN.value.trim(),
+      pilihanJurusan: registrationForm.pilihanJurusan.value,
+      status: status
+    };
+    regs[currentUser] = formData;
+    saveRegistrations(regs);
+  }
+
+  function showPengumuman(status) {
+    verifikasiSection.classList.add('hidden');
+    mainPage.querySelector('#form-pendaftaran').classList.add('hidden');
+    pengumuman.classList.remove('hidden');
+
+    if(status === 'Diterima') {
+      pengumumanTitle.textContent = 'Calon Siswa Diterima';
+      pengumumanMessage.textContent = 'Selamat! Anda telah diterima sebagai siswa baru. Terima kasih atas partisipasi Anda.';
+    } else if(status === 'Tidak Diterima') {
+      pengumumanTitle.textContent = 'Calon Siswa Tidak Diterima';
+      pengumumanMessage.textContent = 'Mohon maaf, Anda belum diterima sebagai siswa baru. Silakan coba lagi di gelombang berikutnya.';
+    }
+  }
+
+})();
+</script>
+</body>
+</html>
+
